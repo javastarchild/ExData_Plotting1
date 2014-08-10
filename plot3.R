@@ -1,0 +1,17 @@
+png(filename="plot3.png", height=480, width=480, bg="white")
+# Data file must be one dirctory up in file system or change line below with location of data file
+data <- read.table("../household_power_consumption.txt", header=TRUE, sep=";", na.strings = "?")
+data$Date2 <- as.Date( as.character(data$Date), "%d/%m/%Y")
+data$DateTime <- strptime(paste(as.character(data$Date), as.character(data$Time)), "%d/%m/%Y %H:%M:%S")
+febonetwo_data <- subset(data, Date2 >= as.Date("2007-02-01") & Date2 <= as.Date("2007-02-02") )
+n <- length(febonetwo_data$Global_active_power)
+datetimevalues <- febonetwo_data$DateTime[2:n]
+Sub_metering_1 <- as.numeric(febonetwo_data$Sub_metering_1[2:n])
+Sub_metering_2 <- as.numeric(febonetwo_data$Sub_metering_2[2:n])
+Sub_metering_3 <- as.numeric(febonetwo_data$Sub_metering_3[2:n])
+plot(datetimevalues, Sub_metering_1, type = "n", ylab = "Energy sub metering", xlab = "")
+lines(datetimevalues, Sub_metering_1, col="black", type="l")
+lines(datetimevalues, Sub_metering_2, col="red", type="l")
+lines(datetimevalues, Sub_metering_3, col="blue", type="l")
+legend("topright", lwd = 1, col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+dev.off()
